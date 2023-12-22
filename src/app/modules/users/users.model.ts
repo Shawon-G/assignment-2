@@ -90,6 +90,6 @@ const userSchema = new Schema<User>({
 });
 
 // Modeling:--------------------------------------------------------
-const UserModel = model<User>('Student', userSchema);
+const UserModel = model<User>('User', userSchema);
 
 export default UserModel;
