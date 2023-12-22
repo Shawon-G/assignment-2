@@ -45,7 +45,7 @@ const orderSchema = new Schema<Order>({
   },
 });
 
-const userSchema = new Schema<User>({
+const usersSchema = new Schema<User>({
   userId: {
     type: Number,
     required: [true, 'User ID is required'],
@@ -90,6 +90,6 @@ const userSchema = new Schema<User>({
 });
 
 // Modeling:--------------------------------------------------------
-const UserModel = model<User>('User', userSchema);
+const UsersModel = model<User>('User', usersSchema);
 
-export default UserModel;
+export default UsersModel;
