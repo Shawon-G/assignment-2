@@ -66,6 +66,21 @@ const getAllOrders = async (id: number) => {
   return result;
 };
 
+// Calculating Total Price:
+const getTheTotalPrice = async (id: number) => {
+  const result = await UsersModel.findOne({ userId: id });
+
+  if (result) {
+    const totalPrice = result.orders?.reduce((total, order) => {
+      return total + order.price * order.quantity;
+    }, 0);
+
+    return { totalPrice };
+  }
+
+  return result;
+};
+
 export const usersServices = {
   createUserIntoDB,
   getAllUsers,
@@ -75,4 +90,5 @@ export const usersServices = {
 
   createOrder,
   getAllOrders,
+  getTheTotalPrice,
 };

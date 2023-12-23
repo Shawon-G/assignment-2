@@ -238,6 +238,37 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+// Caliculating Total Price:
+const getTheTotalPrice = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const result = await usersServices.getTheTotalPrice(Number(id));
+
+    if (result === null) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found',
+        },
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: 'Total price fetched successfully!',
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
+  }
+};
+
 export const usersController = {
   createUser,
   getAllUsers,
@@ -247,4 +278,5 @@ export const usersController = {
 
   createOrder,
   getAllOrders,
+  getTheTotalPrice,
 };
