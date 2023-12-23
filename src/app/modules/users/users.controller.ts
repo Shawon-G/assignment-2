@@ -115,9 +115,55 @@ const deleteASingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Update a single user:
+const updateASingleUser = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const updatedInformation = req.body;
+
+    // Validation using JOI:
+    const { error } = usersValidationSchema.validate(updatedInformation);
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Something went wrong',
+        error: error,
+      });
+    }
+
+    const result = await usersServices.updateASingleUser(
+      Number(id),
+      updatedInformation,
+    );
+    if (result === null) {
+      return res.status(404).json({
+        success: false,
+        message: 'Specefic user is not found for updating',
+        error: {
+          code: 404,
+          description: 'Specefic user is not found for updating',
+        },
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: 'User is updated successfully!',
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
+  }
+};
+
 export const usersController = {
   createUser,
   getAllUsers,
   getASingleUser,
   deleteASingleUser,
+  updateASingleUser,
 };
