@@ -72,7 +72,7 @@ const getASingleUser = async (req: Request, res: Response) => {
     } else {
       return res.status(200).json({
         success: true,
-        message: 'User fetched successfully!',
+        message: 'One specefic user is fetched successfully!',
         data: result,
       });
     }
@@ -160,10 +160,91 @@ const updateASingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Orders: ---------------------
+// Create order:
+const createOrder = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const orderInformation = req.body;
+
+    // Validation using JOI:
+    const { error } = usersValidationSchema.validate(orderInformation);
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Something went wrong',
+        error: error,
+      });
+    }
+
+    const result = await usersServices.createOrder(
+      Number(id),
+      orderInformation,
+    );
+
+    if (result === null) {
+      return res.status(404).json({
+        success: false,
+        message: 'User is not found',
+        error: {
+          code: 404,
+          description: 'User is not found',
+        },
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: 'Order is created successfully!',
+        data: null,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
+  }
+};
+
+// Getting all order:
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const result = await usersServices.getAllOrders(Number(id));
+
+    if (result === null) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found',
+        },
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: 'Order fetched successfully!',
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
+  }
+};
+
 export const usersController = {
   createUser,
   getAllUsers,
   getASingleUser,
   deleteASingleUser,
   updateASingleUser,
+
+  createOrder,
+  getAllOrders,
 };
