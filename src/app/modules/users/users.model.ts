@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { Address, Name, Order, User } from './users.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 const fullNameSchema = new Schema<Name>({
   firstName: {
@@ -87,6 +89,17 @@ const usersSchema = new Schema<User>({
   orders: {
     type: [orderSchema],
   },
+});
+
+// Pre Middleware with BCRYPT:---------------
+usersSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
 });
 
 // Modeling:--------------------------------------------------------
